@@ -134,7 +134,10 @@ class IngredientAmount(models.Model):
 
     class Meta:
         ordering = ['id']
-
+        constraints = (
+            models.UniqueConstraint(
+                fields=['ingredient', 'amount'], name='unique_ingredients'),
+        )
 
 class Cart(models.Model):
     user = models.ForeignKey(

@@ -1,19 +1,22 @@
-from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.pdfgen import canvas
+
 from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from api.filters import AuthorAndTagFilter, IngredientSearchFilter
-from api.models import (Cart, Favorite, Ingredient, IngredientAmount, Recipe,
+from api.models import (Favorite,
+                        Ingredient,
+                        Recipe,
                         Tag)
-from api.serializers import (IngredientSerializer, RecipeSerializer,
-                             ShortRecipeSerializer, TagSerializer)
+from api.serializers import (IngredientSerializer,
+                             RecipeSerializer,
+                             ShortRecipeSerializer,
+                             TagSerializer)
+import api.services
+import api.utils
 
 
 class TagViewSet(viewsets.ModelViewSet):
@@ -55,48 +58,15 @@ class RecipeViewSet(viewsets.ModelViewSet):
             permission_classes=[IsAuthenticated])
     def shopping_cart(self, request, pk=None):
         if request.method == 'POST':
-            return self.add_obj(Cart, request.user, pk)
+            return api.utils.shopping_cart_add(self, request.user, pk)
         elif request.method == 'DELETE':
-            return self.delete_obj(Cart, request.user, pk)
+            return api.utils.shopping_cart_delete(self, request.user, pk)
         return None
 
     @action(detail=False, methods=['get'],
             permission_classes=[IsAuthenticated])
     def download_shopping_cart(self, request):
-        final_list = {}
-        ingredients = IngredientAmount.objects.filter(
-            recipe__cart__user=request.user).values_list(
-            'ingredient__name', 'ingredient__measurement_unit',
-            'amount')
-        for item in ingredients:
-            name = item[0]
-            if name not in final_list:
-                final_list[name] = {
-                    'measurement_unit': item[1],
-                    'amount': item[2]
-                }
-            else:
-                final_list[name]['amount'] += item[2]
-        pdfmetrics.registerFont(
-            TTFont('CenturyGothic', '07558_CenturyGothic.ttf', 'UTF-8'))
-        response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = ('attachment; '
-                                           'filename="shopping_list.pdf"')
-        page = canvas.Canvas(response)
-        page.setFont('CenturyGothic', size=24)
-        page.drawString(200, 800, 'FOODGRAM')
-        page.setFont('CenturyGothic', size=24)
-        page.drawString(150, 750, 'Список ингредиентов')
-        page.setFont('CenturyGothic', size=16)
-        height = 700
-        for i, (name, data) in enumerate(final_list.items(), 1):
-            page.drawString(75, height, (f'● {i} {name} - {data["amount"]}, '
-                                         f'{data["measurement_unit"]}'))
-            height -= 25
-        page.drawString(100, 20, 'Разработчик Олег Жигулин 8 800 555 35 35')
-        page.showPage()
-        page.save()
-        return response
+        return api.services.render_shopping_cart(self, request)
 
     def add_obj(self, model, user, pk):
         if model.objects.filter(user=user, recipe__id=pk).exists():

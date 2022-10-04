@@ -1,18 +1,15 @@
 import base64
 
+from django.db import transaction
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.base import ContentFile
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
-from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.pdfgen import canvas
-from rest_framework import serializers, status
-from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
+from rest_framework import serializers
 
 from users.serializers import CustomUserSerializer
-from api.models import (Cart, Favorite, Ingredient, IngredientAmount, Recipe,
+from api.models import (Favorite,
+                        Ingredient,
+                        IngredientAmount,
+                        Recipe,
                         Tag)
 
 
@@ -92,44 +89,72 @@ class RecipeSerializer(serializers.ModelSerializer):
             return False
         return Recipe.objects.filter(cart__user=user, id=obj.id).exists()
 
-    def validate(self, data):
+    def validate_ingredients(self, data):
         ingredients = self.initial_data.get('ingredients')
         if not ingredients:
             raise serializers.ValidationError({
                 'ingredients': 'Без ингредиентов не будет рецепта'})
         ingredient_list = []
         for ingredient_item in ingredients:
-            ingredient = get_object_or_404(Ingredient,
-                                           id=ingredient_item['id'])
-            if ingredient in ingredient_list:
+            try:
+                ingredient = Ingredient.objects.get(pk=ingredient_item['id'])
+            except ObjectDoesNotExist:
+                raise serializers.ValidationError('Такого ингредиента нет')
+            if ingredient_item in ingredient_list:
                 raise serializers.ValidationError('Повторение ингредиентов')
             if int(ingredient_item['amount']) < 0:
                 raise serializers.ValidationError({
                     'ingredients': ('Количество больше нуля')
                 })
             ingredient_list.append(ingredient)
-
-        data['ingredients'] = ingredients
         return data
 
     def create_ingredients(self, ingredients, recipe):
         for ingredient in ingredients:
-            IngredientAmount.objects.create(
+            IngredientAmount.objects.get_or_create(
                 recipe=recipe,
                 ingredient_id=ingredient.get('id'),
                 amount=ingredient.get('amount'),
             )
 
+    def update_ingredients(self, ingredients_data, recipe):
+        id_data = [ingredient.get('id') for ingredient in ingredients_data]
+        recipe_ingredients = [
+            ingredients.id for ingredients in recipe.ingredients.all()]
+        for new_ingredient in ingredients_data:
+            new_ingredient_id = new_ingredient.get('id')
+            print(new_ingredient.get('amount'))
+            if new_ingredient_id not in recipe_ingredients:
+                IngredientAmount.objects.create(
+                    recipe=recipe,
+                    ingredient_id=new_ingredient_id,
+                    amount=new_ingredient.get(
+                        'amount'),
+                )
+            else:
+                IngredientAmount.objects.filter(
+                    recipe=recipe,
+                    ingredient_id=new_ingredient_id
+                ).update(
+                    amount=new_ingredient.get('amount'))
+
+        for ingredient_id in recipe_ingredients:
+            if ingredient_id not in id_data:
+                IngredientAmount.objects.filter(
+                    recipe=recipe, ingredient_id=ingredient_id).delete()
+
+    @transaction.atomic
     def create(self, validated_data):
-        print(validated_data)
         image = validated_data.pop('image')
-        ingredients_data = validated_data.pop('ingredients')
+        ingredients_data = self.initial_data.get('ingredients')
         recipe = Recipe.objects.create(image=image, **validated_data)
         tags_data = self.initial_data.get('tags')
         recipe.tags.set(tags_data)
         self.create_ingredients(ingredients_data, recipe)
+        recipe.save()
         return recipe
 
+    @transaction.atomic
     def update(self, instance, validated_data):
         instance.image = validated_data.get('image', instance.image)
         instance.name = validated_data.get('name', instance.name)
@@ -140,70 +165,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         instance.tags.clear()
         tags_data = self.initial_data.get('tags')
         instance.tags.set(tags_data)
-        IngredientAmount.objects.filter(recipe=instance).all().delete()
-        self.create_ingredients(validated_data.get('ingredients'), instance)
+        ingredients_data = self.initial_data.get('ingredients')
+        self.update_ingredients(ingredients_data, instance)
         instance.save()
         return instance
-
-    @action(detail=True, methods=['post', 'delete'],
-            permission_classes=[IsAuthenticated])
-    def shopping_cart(self, request, pk=None):
-        if request.method == 'POST':
-            return self.add_obj(Cart, request.user, pk)
-        elif request.method == 'DELETE':
-            return self.delete_obj(Cart, request.user, pk)
-        return None
-
-    @action(detail=False, methods=['get'],
-            permission_classes=[IsAuthenticated])
-    def download_shopping_cart(self, request):
-        final_list = {}
-        ingredients = IngredientAmount.objects.filter(
-            recipe__cart__user=request.user).values_list(
-            'ingredient__name', 'ingredient__measurement_unit',
-            'amount')
-        for item in ingredients:
-            name = item[0]
-            if name not in final_list:
-                final_list[name] = {
-                    'measurement_unit': item[1],
-                    'amount': item[2]
-                }
-            else:
-                final_list[name]['amount'] += item[2]
-        pdfmetrics.registerFont(
-            TTFont('Slimamif', 'Slimamif.ttf', 'UTF-8'))
-        response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = ('attachment; '
-                                           'filename="shopping_list.pdf"')
-        page = canvas.Canvas(response)
-        page.setFont('Slimamif', size=24)
-        page.drawString(200, 800, 'Список ингредиентов')
-        page.setFont('Slimamif', size=16)
-        height = 750
-        for i, (name, data) in enumerate(final_list.items(), 1):
-            page.drawString(75, height, (f'<{i}> {name} - {data["amount"]}, '
-                                         f'{data["measurement_unit"]}'))
-            height -= 25
-        page.showPage()
-        page.save()
-        return response
-
-    def add_obj(self, model, user, pk):
-        if model.objects.filter(user=user, recipe__id=pk).exists():
-            return Response({
-                'errors': 'Рецепт уже добавлен в список'
-            }, status=status.HTTP_400_BAD_REQUEST)
-        recipe = get_object_or_404(Recipe, id=pk)
-        model.objects.create(user=user, recipe=recipe)
-        serializer = ShortRecipeSerializer(recipe)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-    def delete_obj(self, model, user, pk):
-        obj = model.objects.filter(user=user, recipe__id=pk)
-        if obj.exists():
-            obj.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response({
-            'errors': 'Рецепт уже удален'
-        }, status=status.HTTP_400_BAD_REQUEST)

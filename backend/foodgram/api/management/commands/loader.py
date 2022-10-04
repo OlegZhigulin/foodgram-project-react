@@ -1,13 +1,11 @@
-import json
+import json as reproduce_to_json
 import os
 
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.db.utils import IntegrityError
 
-from api.models import Ingredient, Tag
-
-DATA_ROOT = os.path.join(settings.BASE_DIR, 'data')
+from api.models import Ingredient
 
 
 class Command(BaseCommand):
@@ -19,18 +17,12 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         try:
-            with open(os.path.join(DATA_ROOT, options['filename']), 'r',
+            with open(os.path.join('data', options['filename']), 'r',
                       encoding='utf-8') as f:
-                data = json.load(f)
+                data = reproduce_to_json.load(f)
                 for ingredient in data:
-                    try:
-                        Ingredient.objects.create(name=ingredient["name"],
-                                                  measurement_unit=ingredient[
-                                                      "measurement_unit"])
-                    except IntegrityError:
-                        print(f'Ингридиет {ingredient["name"]} '
-                              f'{ingredient["measurement_unit"]} '
-                              f'уже есть в базе')
-
+                    Ingredient.objects.get_or_create(name=ingredient["name"],
+                                                     measurement_unit=ingredient[
+                        "measurement_unit"])
         except FileNotFoundError:
             raise CommandError('Файл отсутствует в директории data')

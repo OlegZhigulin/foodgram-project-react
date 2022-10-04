@@ -1,9 +1,10 @@
-from users.models import CustomUser, Subscribe
+from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework import serializers
-from djoser.serializers import UserSerializer, UserCreateSerializer
-from api.models import Recipe
 from rest_framework.generics import get_object_or_404
-from api.serializers import ShortRecipeSerializer
+
+from api.models import Recipe
+import api.serializers 
+from users.models import CustomUser, Subscribe
 
 
 class CustomUserSerializer(UserSerializer):
@@ -44,7 +45,7 @@ class FollowerSerializer(CustomUserSerializer):
         queryset = Recipe.objects.filter(author=obj)
         if limit:
             queryset = queryset[:int(limit)]
-        return ShortRecipeSerializer(queryset, many=True).data
+        return api.serializers.ShortRecipeSerializer(queryset, many=True).data
 
     def get_recipes_count(self, obj):
         return Recipe.objects.filter(author=obj).count()
@@ -65,7 +66,6 @@ class FollowCreateSerializer(serializers.ModelSerializer):
     def validate(self, data):
         if self.context['request'].method != 'POST':
             return data
-        print(data)
         subs_id = self.context['request'].parser_context['kwargs']['user_id']
         author = get_object_or_404(CustomUser, id=subs_id)
         user = self.context['request'].user

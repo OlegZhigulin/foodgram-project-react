@@ -2,7 +2,7 @@ from django.contrib import admin
 from api.models import Ingredient, Tag, Recipe, IngredientAmount
 
 
-class ingredient_inline(admin.TabularInline):
+class IngredientInline(admin.TabularInline):
     model = IngredientAmount
     extra = 10
 
@@ -19,13 +19,13 @@ class TagAdmin(admin.ModelAdmin):
 
 class RecipeAdmin(admin.ModelAdmin):
     list_display = ('name', 'author', 'cooking_time', 'count_favorites')
-    search_fields = ('name', )
+    search_fields = ('name', 'author__email')
     list_filter = ('tags', 'author')
     empty_value_display = '-пусто-'
-    inlines = (ingredient_inline,)
+    inlines = (IngredientInline,)
 
     def count_favorites(self, obj):
-        return obj.is_favorite.count()
+        return obj.is_favorited.count()
 
 
 class IngredientAmountAdmin(admin.ModelAdmin):
