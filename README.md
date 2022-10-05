@@ -47,7 +47,32 @@ DB_HOST=db # название сервиса (контейнера)
 DB_PORT=5432 # порт для подключения к БД }
 ```
 
+## Перейти в папку infra и запустить docker-compose.yaml (при установленном и запущенном Docker)
 
+cd foodgram-project-react/infra
+
+## для запуска контейнера выполнить команду :
+### с логами в терминале:
+docker-compose up --build
+### без логов в терминале:
+docker-compose up -d --build
+## после успешного запуска подготовить миграции
+
+docker-compose exec web python manage.py makemigrations
+
+## и выполнить миграции
+
+docker-compose exec web python manage.py migrate
+
+## создать суперпользователя 
+
+docker-compose exec web python manage.py createsuperuser
+
+## и собрать статику
+
+docker-compose exec web python manage.py collectstatic --no-input 
+
+## Теперь проект доступен по адресу: http://51.250.11.18
 
 
 # Примеры запросов к API:
