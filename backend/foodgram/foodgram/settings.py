@@ -110,7 +110,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 AUTH_USER_MODEL = 'users.CustomUser'
 CORS_URLS_REGEX = r'^/api/.*$'
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
+    'http://51.250.11.18:3000',
 ]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
