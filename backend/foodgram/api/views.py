@@ -1,26 +1,20 @@
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-
 from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+import api.services
+import api.utils
 from api.filters import AuthorAndTagFilter, IngredientSearchFilter
-from api.models import (
-    Favorite,
-    Ingredient,
-    Recipe,
-    Tag
-)
+from api.models import Favorite, Ingredient, Recipe, Tag
 from api.serializers import (
     IngredientSerializer,
     RecipeSerializer,
     ShortRecipeSerializer,
-    TagSerializer
+    TagSerializer,
 )
-import api.services
-import api.utils
 
 
 class TagViewSet(viewsets.ModelViewSet):

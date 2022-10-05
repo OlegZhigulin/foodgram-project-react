@@ -1,18 +1,12 @@
 import base64
 
-from django.db import transaction
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.base import ContentFile
+from django.db import transaction
 from rest_framework import serializers
 
 from users.serializers import CustomUserSerializer
-from api.models import (
-    Favorite,
-    Ingredient,
-    IngredientAmount,
-    Recipe,
-    Tag
-)
+from api.models import Favorite, Ingredient, IngredientAmount, Recipe, Tag
 
 
 class TagSerializer(serializers.ModelSerializer):

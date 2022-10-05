@@ -3,7 +3,6 @@ from rest_framework.routers import DefaultRouter
 
 from users.views import CustomUserViewSet, FollowViewSet, SubscribeViewSet
 
-
 router = DefaultRouter()
 router.register(
     'users/subscriptions',

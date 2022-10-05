@@ -1,13 +1,12 @@
 from django.contrib.auth import get_user_model
 from djoser.views import UserViewSet
+from rest_framework import mixins, status, viewsets
 from rest_framework.generics import get_object_or_404
-from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
-from rest_framework import viewsets, status, mixins
+from rest_framework.response import Response
 
-from users.serializers import FollowerSerializer, FollowCreateSerializer
 from users.models import Subscribe
-
+from users.serializers import FollowCreateSerializer, FollowerSerializer
 
 User = get_user_model()
 

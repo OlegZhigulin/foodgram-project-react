@@ -2,8 +2,8 @@ from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework import serializers
 from rest_framework.generics import get_object_or_404
 
+import api.serializers
 from api.models import Recipe
-import api.serializers 
 from users.models import CustomUser, Subscribe
 
 
