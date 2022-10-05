@@ -7,14 +7,18 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from api.filters import AuthorAndTagFilter, IngredientSearchFilter
-from api.models import (Favorite,
-                        Ingredient,
-                        Recipe,
-                        Tag)
-from api.serializers import (IngredientSerializer,
-                             RecipeSerializer,
-                             ShortRecipeSerializer,
-                             TagSerializer)
+from api.models import (
+    Favorite,
+    Ingredient,
+    Recipe,
+    Tag
+)
+from api.serializers import (
+    IngredientSerializer,
+    RecipeSerializer,
+    ShortRecipeSerializer,
+    TagSerializer
+)
 import api.services
 import api.utils
 

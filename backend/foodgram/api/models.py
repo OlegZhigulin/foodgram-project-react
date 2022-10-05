@@ -2,7 +2,6 @@ from django.db import models
 from django.core.validators import RegexValidator
 from django.contrib.auth import get_user_model
 
-
 User = get_user_model()
 
 
@@ -138,6 +137,7 @@ class IngredientAmount(models.Model):
             models.UniqueConstraint(
                 fields=['ingredient', 'amount'], name='unique_ingredients'),
         )
+
 
 class Cart(models.Model):
     user = models.ForeignKey(
