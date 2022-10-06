@@ -43,7 +43,7 @@ jobs:
           uses: docker/build-push-action@v2 
           with:
             push: true
-            tags: olegzhigulin/foodgram_work_helper:latest
+            tags: olegzhigulin/foodgram-backend:latest
             context: ./backend/foodgram/
             file: ./backend/foodgram/Dockerfile
   deploy:
