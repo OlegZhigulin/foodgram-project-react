@@ -29,12 +29,11 @@ services:
     depends_on:
       - web
   frontend:
-    build:
-      context: ../frontend
-      dockerfile: Dockerfile
+    image: olegzhigulin/foodgram-frontend:latest
     volumes:
       - ../frontend/:/app/result_build/
-
+    depends_on:
+      - db
 volumes:
   static_value:
   media_value:
