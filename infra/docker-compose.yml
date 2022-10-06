@@ -7,7 +7,8 @@ services:
     env_file:
       - ./.env
   web:
-    image: olegzhigulin/foodgram_work_helper:latest
+    build: 
+      context: ../backend/foodgram
     restart: always
     volumes:
       - static_value:/app/static/
@@ -21,7 +22,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
       - ../frontend/build:/usr/share/nginx/html/
       - ../docs/redoc.html:/usr/share/nginx/html/api/docs/redoc.html
       - ../docs/openapi-schema.yml:/usr/share/nginx/html/api/docs/openapi-schema.yml
