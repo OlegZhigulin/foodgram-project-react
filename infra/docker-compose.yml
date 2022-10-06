@@ -34,8 +34,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ../frontend/:/app/result_build/
-    depends_on:
-      - nginx
+
 volumes:
   static_value:
   media_value:
