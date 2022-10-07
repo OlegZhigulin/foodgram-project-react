@@ -33,6 +33,7 @@ services:
       - ../frontend/:/app/result_build/
     depends_on:
       - db
+      
 volumes:
   static_value:
   media_value:
