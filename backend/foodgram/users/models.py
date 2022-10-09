@@ -51,11 +51,20 @@ class CustomUser(AbstractUser):
 
 class Subscribe(models.Model):
     user = models.ForeignKey(
-        CustomUser, on_delete=models.CASCADE, related_name='follower')
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name='follower',
+        verbose_name='Подписчик'
+        )
     author = models.ForeignKey(
-        CustomUser, on_delete=models.CASCADE, related_name='following')
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name='following',
+        verbose_name='Автор'
+        )
 
     class Meta:
+        verbose_name = 'Подписку'
         verbose_name_plural = 'Подписки'
         constraints = (
             models.UniqueConstraint(
