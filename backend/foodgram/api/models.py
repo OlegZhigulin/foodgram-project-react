@@ -113,6 +113,9 @@ class Recipe(models.Model):
                 fields=['author', 'name'], name='unique_recipe'),
         )
 
+    def __str__(self):
+        return self.name
+
 
 class IngredientAmount(models.Model):
     ingredient = models.ForeignKey(
