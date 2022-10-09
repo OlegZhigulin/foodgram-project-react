@@ -142,6 +142,9 @@ class IngredientAmount(models.Model):
                 fields=['ingredient', 'amount'], name='unique_ingredients'),
         )
 
+    def __str__(self):
+        return f'{self.ingredient} {self.amount}'
+
 
 class Cart(models.Model):
     user = models.ForeignKey(

@@ -1,6 +1,11 @@
 from django.contrib import admin
 
-from api.models import Ingredient, Recipe, IngredientAmount
+from api.models import Ingredient, IngredientAmount, Recipe, Tag
+
+
+class TagAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    list_filter = ('name',)
 
 
 class IngredientInline(admin.TabularInline):
@@ -25,5 +30,11 @@ class RecipeAdmin(admin.ModelAdmin):
         return obj.is_favorited.count()
 
 
+class IngredientAmountAdmin(admin.ModelAdmin):
+    list_display = ('recipe', 'ingredient', 'id')
+
+
 admin.site.register(Ingredient, IngredientAdmin)
 admin.site.register(Recipe, RecipeAdmin)
+admin.site.register(Tag, TagAdmin)
+admin.site.register(IngredientAmount, IngredientAmountAdmin)

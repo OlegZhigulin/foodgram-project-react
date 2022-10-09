@@ -16,8 +16,6 @@ ALLOWED_HOSTS = ['51.250.11.18']
 
 
 INSTALLED_APPS = [
-    'api.apps.ApiConfig',
-    'users.apps.UsersConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -30,6 +28,8 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',
     'rest_framework.authtoken',
     'djoser',
+    'api.apps.ApiConfig',
+    'users.apps.UsersConfig',
 ]
 
 MIDDLEWARE = [
