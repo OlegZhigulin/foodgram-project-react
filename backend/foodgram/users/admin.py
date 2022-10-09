@@ -1,4 +1,5 @@
 from django.contrib import admin, auth
+from django.contrib.auth.models import Group
 
 from api.models import Cart
 
@@ -17,5 +18,5 @@ class UserAdmin(admin.ModelAdmin):
     inlines = (CartInline,)
 
 
-admin.site.unregister(User)
+admin.site.unregister(Group)
 admin.site.register(User, UserAdmin)
