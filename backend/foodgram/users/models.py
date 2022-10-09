@@ -56,6 +56,7 @@ class Subscribe(models.Model):
         CustomUser, on_delete=models.CASCADE, related_name='following')
 
     class Meta:
+        verbose_name_plural = 'Подписки' 
         constraints = (
             models.UniqueConstraint(
                 fields=('author', 'user'), name='unique_following'),

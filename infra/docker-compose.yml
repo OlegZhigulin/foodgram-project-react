@@ -25,6 +25,8 @@ services:
       - ../frontend/build:/usr/share/nginx/html/
       - ../docs/redoc.html:/usr/share/nginx/html/api/docs/redoc.html
       - ../docs/openapi-schema.yml:/usr/share/nginx/html/api/docs/openapi-schema.yml
+      - static_value:/var/html/static/
+      - media_value:/var/html/media/
     depends_on:
       - web
   frontend:
@@ -33,7 +35,7 @@ services:
       - ../frontend/:/app/result_build/
     depends_on:
       - db
-      
+
 volumes:
   static_value:
   media_value:
