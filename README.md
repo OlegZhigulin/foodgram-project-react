@@ -1,4 +1,4 @@
-![finaltask](https://github.com/OlegZhigulin/foodgram-project-react/actions/workflows/yamdb_workflow.yml/badge.svg)
+![finaltask](https://github.com/OlegZhigulin/foodgram-project-react/actions/workflows/main.yml/badge.svg)
 ## Описание
 FOODGRAM = это новый сервис, который поможет Вам делится рецептами и разнообразить свои кулинарные способности.
 Доступен по адресу 51.250.11.18
