@@ -17,4 +17,5 @@ class UserAdmin(admin.ModelAdmin):
     inlines = (CartInline,)
 
 
+admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
