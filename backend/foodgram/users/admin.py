@@ -2,8 +2,13 @@ from django.contrib import admin, auth
 from django.contrib.auth.models import Group
 
 from api.models import Cart, Favorite
+from users.models import Subscribe
 
 User = auth.get_user_model()
+
+
+class SubscribeAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'author')
 
 
 class CartInline(admin.TabularInline):
@@ -25,3 +30,4 @@ class UserAdmin(admin.ModelAdmin):
 
 admin.site.unregister(Group)
 admin.site.register(User, UserAdmin)
+admin.site.register(Subscribe, SubscribeAdmin)
