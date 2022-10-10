@@ -36,7 +36,7 @@ class IngredientAmountAdmin(admin.ModelAdmin):
 
 
 class RusTokenProxyAdmin(admin.ModelAdmin):
-    list_display = ('id',)
+    pass
 
 
 admin.site.register(RusTokenProxy, RusTokenProxyAdmin)
