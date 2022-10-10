@@ -1,6 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from rest_framework.authtoken.admin import TokenProxy
+from rest_framework.authtoken import admin
 
 
 class CustomUser(AbstractUser):
@@ -76,7 +76,8 @@ class Subscribe(models.Model):
         return f'{self.user} подписан на {self.author}'
 
 
-class RusTokenProxy(TokenProxy):
+class RusTokenProxy(admin.TokenProxy):
     class Meta:
-        verbose_name = 'ТОКЕНЫ'
         proxy = True
+        verbose_name = 'ТОКЕН'
+        verbose_name_plural = 'ТОКЕНЫ'
