@@ -29,9 +29,7 @@ class IngredientAmountSerializer(serializers.ModelSerializer):
     )
     amount = serializers.IntegerField(
         max_value=2147483647,
-        min_value=0,
-        error_messages={
-            'Ошибка': 'Введите число в диапазане от 0 до 2147483647'},
+        min_value=0
     )
 
     class Meta:
@@ -91,7 +89,7 @@ class RecipeSerializer(serializers.ModelSerializer):
             return False
         return Recipe.objects.filter(cart__user=user, id=obj.id).exists()
 
-    def validate_ingredients(self, data):
+    def validate(self, data):
         ingredients = self.initial_data.get('ingredients')
         if not ingredients:
             raise serializers.ValidationError({
@@ -129,7 +127,6 @@ class RecipeSerializer(serializers.ModelSerializer):
             ingredients.id for ingredients in recipe.ingredients.all()]
         for new_ingredient in ingredients_data:
             new_ingredient_id = new_ingredient.get('id')
-            print(new_ingredient.get('amount'))
             if new_ingredient_id not in recipe_ingredients:
                 IngredientAmount.objects.create(
                     recipe=recipe,
