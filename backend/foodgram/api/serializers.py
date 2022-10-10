@@ -27,6 +27,12 @@ class IngredientAmountSerializer(serializers.ModelSerializer):
     measurement_unit = serializers.ReadOnlyField(
         source='ingredient.measurement_unit'
     )
+    amount = serializers.IntegerField(
+        max_value=2147483647,
+        min_value=0,
+        error_messages={
+            'Ошибка': 'Введите число в диапазане от 0 до 2147483647'},
+    )
 
     class Meta:
         model = IngredientAmount
