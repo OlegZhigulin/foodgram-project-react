@@ -1,7 +1,7 @@
-from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.models import TokenProxy
 
 
-class RusToken(Token):
+class RusToken(TokenProxy):
     class Meta:
         verbose_name = 'ТОКЕН'
         verbose_name_plural = 'ТОКЕНЫ'
