@@ -1,10 +1,15 @@
 from django.contrib import admin, auth
 from django.contrib.auth.models import Group
+from rest_framework.authtoken.admin import TokenProxy
 
 from api.models import Cart, Favorite
-from users.models import Subscribe
+from users.models import Subscribe, RusTokenProxy
 
 User = auth.get_user_model()
+
+
+class RusTokenProxyAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'user')
 
 
 class SubscribeAdmin(admin.ModelAdmin):
@@ -29,5 +34,7 @@ class UserAdmin(admin.ModelAdmin):
 
 
 admin.site.unregister(Group)
+admin.site.register(RusTokenProxy, RusTokenProxyAdmin)
+admin.site.unregister(TokenProxy)
 admin.site.register(User, UserAdmin)
 admin.site.register(Subscribe, SubscribeAdmin)
