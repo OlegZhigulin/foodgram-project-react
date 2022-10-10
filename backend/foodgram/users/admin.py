@@ -29,7 +29,7 @@ class UserAdmin(admin.ModelAdmin):
 
 
 class RusTokenAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user')
+    list_display = ('pk', 'user')
 
 
 admin.site.unregister(Group)
