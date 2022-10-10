@@ -29,8 +29,12 @@ class UserAdmin(admin.ModelAdmin):
     inlines = (CartInline, FavoriteInline)
 
 
+class RusTokenProxyAdmin(admin.ModelAdmin):
+    list_display = ('id', )
+
+
 admin.site.unregister(Group)
 admin.site.unregister(TokenProxy)
-admin.site.register(RusTokenProxy)
+admin.site.register(RusTokenProxy, RusTokenProxyAdmin)
 admin.site.register(User, UserAdmin)
 admin.site.register(Subscribe, SubscribeAdmin)
