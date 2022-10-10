@@ -1,6 +1,5 @@
 from django.contrib import admin, auth
 # from django.contrib.auth.models import Group
-
 from api.models import Cart, Favorite
 from users.models import Subscribe
 
