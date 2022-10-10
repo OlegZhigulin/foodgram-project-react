@@ -1,9 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group
-from rest_framework.authtoken.admin import TokenProxy
 
 from api.models import Cart, Favorite
-from users.models import Subscribe, RusTokenProxy, CustomUser
+from users.models import CustomUser, RusTokenProxy, Subscribe
 
 
 class RusTokenProxyAdmin(admin.ModelAdmin):
@@ -35,4 +34,3 @@ admin.site.unregister(Group)
 admin.site.register(CustomUser, UserAdmin)
 admin.site.register(Subscribe, SubscribeAdmin)
 admin.site.register(RusTokenProxy, RusTokenProxyAdmin)
-admin.site.unregister(TokenProxy)
