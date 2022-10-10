@@ -1,5 +1,6 @@
 from django.contrib import admin, auth
 from django.contrib.auth.models import Group
+from rest_framework.authtoken.models import Token
 
 from api.models import Cart, Favorite
 from users.models import Subscribe
@@ -28,6 +29,7 @@ class UserAdmin(admin.ModelAdmin):
     inlines = (CartInline, FavoriteInline)
 
 
+admin.site.unregister(Token)
 admin.site.unregister(Group)
 admin.site.register(User, UserAdmin)
 admin.site.register(Subscribe, SubscribeAdmin)
