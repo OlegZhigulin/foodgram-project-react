@@ -122,7 +122,7 @@ DJOSER = {
         'user_create': 'users.serializers.CustomUserCreateSerializer',
         'user': 'users.serializers.CustomUserSerializer',
     },
-
+    'TOKEN_MODEL': 'users.rus_token.RusToken',
     'HIDE_USERS': False
 
 }
