@@ -1,13 +1,5 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from rest_framework.authtoken.admin import TokenProxy
-
-
-class RusTokenProxy(TokenProxy):
-    class Meta:
-        proxy = True
-        verbose_name = 'ТОКЕН'
-        verbose_name_plural = 'ТОКЕНЫ'
 
 
 class CustomUser(AbstractUser):

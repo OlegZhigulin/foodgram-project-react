@@ -1,8 +1,16 @@
 from django.contrib.auth import get_user_model
 from django.core.validators import RegexValidator
 from django.db import models
+from rest_framework.authtoken.admin import TokenProxy
 
 User = get_user_model()
+
+
+class RusTokenProxy(TokenProxy):
+    class Meta:
+        proxy = True
+        verbose_name = 'ТОКЕН'
+        verbose_name_plural = 'ТОКЕНЫ'
 
 
 class Ingredient(models.Model):
