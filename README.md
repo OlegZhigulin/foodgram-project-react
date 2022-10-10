@@ -14,7 +14,7 @@ FOODGRAM = это новый сервис, который поможет Вам 
 
 ### Технологии
 ``` 
-Python 3.7
+Python 3.8
 Django 3.2
 DRF 3.12.4
 docker-compose 3.8
