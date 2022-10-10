@@ -1,8 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group
 
-from api.models import Cart, Favorite
-from users.models import CustomUser, RusTokenProxy, Subscribe
+from api.models import Cart, Favorite, RusTokenProxy
+from users.models import CustomUser, Subscribe
 
 
 class RusTokenProxyAdmin(admin.ModelAdmin):
