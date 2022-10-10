@@ -1,8 +1,7 @@
 from django.contrib import admin
 from rest_framework.authtoken.admin import TokenProxy
 
-from api.models import Ingredient, IngredientAmount, Recipe, Tag
-from api.models import RusTokenProxy
+from api.models import Ingredient, IngredientAmount, Recipe, RusTokenProxy, Tag
 
 
 class TagAdmin(admin.ModelAdmin):
@@ -36,8 +35,12 @@ class IngredientAmountAdmin(admin.ModelAdmin):
     list_display = ('recipe', 'ingredient', 'id')
 
 
+class RusTokenProxyAdmin(admin.ModelAdmin):
+    list_display = ('id',)
+
+
+admin.site.register(RusTokenProxy, RusTokenProxyAdmin)
 admin.site.unregister(TokenProxy)
-admin.site.register(RusTokenProxy)
 admin.site.register(Ingredient, IngredientAdmin)
 admin.site.register(Recipe, RecipeAdmin)
 admin.site.register(Tag, TagAdmin)
