@@ -36,7 +36,7 @@ class IngredientAmountAdmin(admin.ModelAdmin):
 
 
 class RusTokenProxyAdmin(admin.ModelAdmin):
-    list_display = ('pk',)
+    list_display = ('pk', 'user')
 
 
 admin.site.register(RusTokenProxy, RusTokenProxyAdmin)
