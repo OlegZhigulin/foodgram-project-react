@@ -129,7 +129,9 @@ DJOSER = {
 }
 
 REST_FRAMEWORK = {
-    "EXCEPTION_HANDLER": "drf_standardized_errors.handler.exception_handler",
+    'EXCEPTION_HANDLER': [
+        'drf_standardized_errors.handler.exception_handler',
+    ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
