@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',
     'rest_framework.authtoken',
     'djoser',
+    'drf-standardized-errors',
     'api.apps.ApiConfig',
     'users.apps.UsersConfig',
 ]
@@ -128,6 +129,7 @@ DJOSER = {
 }
 
 REST_FRAMEWORK = {
+    "EXCEPTION_HANDLER": "drf_standardized_errors.handler.exception_handler",
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
