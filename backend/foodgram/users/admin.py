@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group
+from rest_framework.authtoken.admin import TokenAdmin
 from rest_framework.authtoken.models import TokenProxy
 
 from api.models import Cart, Favorite
@@ -28,12 +29,8 @@ class UserAdmin(admin.ModelAdmin):
     inlines = (CartInline, FavoriteInline)
 
 
-class RusTokenAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'user')
-
-
 admin.site.unregister(Group)
 admin.site.register(CustomUser, UserAdmin)
 admin.site.register(Subscribe, SubscribeAdmin)
 admin.site.unregister(TokenProxy)
-admin.site.register(RusToken, RusTokenAdmin)
+admin.site.register(RusToken, TokenAdmin)
