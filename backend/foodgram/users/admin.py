@@ -6,6 +6,7 @@ from api.models import Cart, Favorite
 from users.models import CustomUser, Subscribe
 from users.rus_token import RusToken
 
+
 class SubscribeAdmin(admin.ModelAdmin):
     list_display = ('id', 'user', 'author')
 
@@ -25,6 +26,7 @@ class UserAdmin(admin.ModelAdmin):
     search_fields = ('first_name', 'email')
     list_filter = ('username', 'email')
     inlines = (CartInline, FavoriteInline)
+
 
 class RusTokenAdmin(admin.ModelAdmin):
     list_display = ('id', 'user')
