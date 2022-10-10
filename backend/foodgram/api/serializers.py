@@ -102,6 +102,10 @@ class RecipeSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError({
                     'ingredients': ('Количество больше нуля')
                 })
+            if int(ingredient_item['amount']) > 2147483647:
+                raise serializers.ValidationError({
+                    'ingredients': ('Слишком большое число')
+                })
             ingredient_list.append(ingredient)
         return data
 
